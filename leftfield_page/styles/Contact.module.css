@@ -1,0 +1,88 @@
+.container {
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.container h1 {
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #555;
+    margin-bottom: 24px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.form input,
+.form textarea {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+.form input:focus,
+.form textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.form button {
+    margin-top: 10px;
+    padding: 12px;
+    background: #2563eb;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.form button:hover {
+    background: #1e40af;
+}
+
+.success {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    background-color: #2563eb;
+    color: white;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+    background-color: #1e40af;
+    transform: translateY(-2px);
+}
+
+.button:active {
+    transform: translateY(0);
+    background-color: #1e3a8a;
+}

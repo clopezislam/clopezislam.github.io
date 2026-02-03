@@ -1,97 +1,53 @@
-"use client"
+"use client";
 
-import { ChangeEvent, useState, FormEvent} from "react";
+import { useForm, ValidationError } from "@formspree/react";
+import Link from "next/link";
+import styles from "@/styles/Contact.module.css";
 
-interface ContactInfo {
+export default function ContactPage() {
+    const [state, handleSubmit] = useForm(process.env.NEXT_PUBLIC_FORMSPREE_KEY!);
 
-    name: string;
-    email: string;
-    phone: string;
-    message: string;
-}
+    const resetForm = () => {
+        // reload page  reset form state
+        window.location.reload();
+    };
 
-export default function ContactPage()
-{
-    const [formData, setFormData] = useState<ContactInfo>({
-            name:"",
-            email:"",
-            phone: "",
-            message: "",
-        });
-
-    const [status, setStatus] = useState<string>("");
-
-    //On click of the form, update the local state of formData to be sent
-    const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setFormData({ ... formData, [event.target.name]: event.target.value });
-    }
-
-    const handleSubmit = async (event: FormEvent) => {
-        event.preventDefault();
-        setStatus("Sending...");
-
-        try {
-            //Provide api endpoint here, posts user info to this endpoint
-            const response = await fetch("api/contactEmail", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                setStatus("success");
-            }
-            else
-            {
-                setStatus("error");
-            }
-        }
-        catch (error) {
-            console.error(error);
-            setStatus("error");
-        }
+    if (state.succeeded) {
+        return (
+            <div className={styles.success}>
+                <h1>Message Sent</h1>
+                <p>Thanks for reaching out. We’ll get back to you shortly.</p>
+                <div className={styles.buttons}>
+                    <Link href="/" className={styles.button}>
+                        Home
+                    </Link>
+                    <button onClick={resetForm} className={styles.button}>
+                        Submit Another
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     return (
-        <div>
-            <h1> Contact Us</h1>
+        <div className={styles.container}>
+            <h1>Contact Us</h1>
+            <p className={styles.subtitle}>
+                Have a question or want a quote? Fill out the form below.
+            </p>
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="phone"
-                    placeholder="Number"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    required
-                />
-                <input
-                    type="text"
-                    name="message"
-                    placeholder="Message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                />
-                <button type="submit" >Submit</button>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <input name="name" placeholder="Your Name" required />
+                <input type="email" name="email" placeholder="Your Email" required />
+                <ValidationError prefix="Email" field="email" errors={state.errors} />
+                <input name="phone" placeholder="Phone Number (optional)" />
+                <textarea name="message" placeholder="Your Message" rows={5} required />
+                <ValidationError prefix="Message" field="message" errors={state.errors} />
+
+                <button type="submit" disabled={state.submitting}>
+                    {state.submitting ? "Sending..." : "Send Message"}
+                </button>
             </form>
         </div>
-    )
-
+    );
 }
